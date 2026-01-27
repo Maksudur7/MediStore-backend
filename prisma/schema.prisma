@@ -13,18 +13,148 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+enum Role {
+  CUSTOMER
+  SELLER
+  ADMIN
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model User {
+  id            String     @id
+  name          String
+  email         String
+  emailVerified Boolean    @default(false)
+  image         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  role          Role       @default(CUSTOMER)
+  phone         String?
+  stasus        String?
+  medicines     Medicine[]
+  orders        Order[]
+  reviews       Review[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum OrderStatus {
+  PLACED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  medicines Medicine[]
+}
+
+model Medicine {
+  id            String  @id @default(uuid())
+  name          String
+  description   String
+  price         Float
+  manufacturer  String
+  stockQuantity Int     @default(0)
+  image         String?
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  categoryId String
+  seller     User        @relation(fields: [sellerId], references: [id])
+  sellerId   String
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  totalAmount     Float
+  shippingAddress String
+  status          OrderStatus @default(PLACED)
+
+  customer   User        @relation(fields: [customerId], references: [id])
+  customerId String
+  items      OrderItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  quantity  Int
+  unitPrice Float
+
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String
+  medicine   Medicine @relation(fields: [medicineId], references: [id])
+  medicineId String
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  rating  Int 
+  comment String?
+  
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String
+  medicine   Medicine @relation(fields: [medicineId], references: [id])
+  medicineId String
+
+  createdAt DateTime @default(now())
 }
