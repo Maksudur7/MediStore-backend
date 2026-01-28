@@ -20,7 +20,7 @@ enum Role {
 }
 
 model User {
-  id            String     @id
+  id            String     @id @default(uuid())
   name          String
   email         String
   emailVerified Boolean    @default(false)
@@ -35,6 +35,7 @@ model User {
   medicines     Medicine[]
   orders        Order[]
   reviews       Review[]
+  cartItems     CartItem[]
 
   @@unique([email])
   @@map("user")
@@ -57,7 +58,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -120,8 +121,9 @@ model Medicine {
   orderItems OrderItem[]
   reviews    Review[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItems CartItem[]
 }
 
 model Order {
@@ -150,9 +152,9 @@ model OrderItem {
 
 model Review {
   id      String  @id @default(uuid())
-  rating  Int 
+  rating  Int
   comment String?
-  
+
   customer   User     @relation(fields: [customerId], references: [id])
   customerId String
   medicine   Medicine @relation(fields: [medicineId], references: [id])
@@ -160,3 +162,20 @@ model Review {
 
   createdAt DateTime @default(now())
 }
+
+model CartItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+
+  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+  medicineId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, medicineId])
+  @@map("cartItem")
+}
+

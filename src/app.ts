@@ -1,4 +1,4 @@
-import express , {Application} from 'express'
+import express, { Application } from 'express'
 import cors from "cors"
 import { userRouter } from './modules/Users/users.router'
 import { reviewsRouter } from './modules/Reviews/reviews.router'
@@ -12,6 +12,7 @@ app.use(cors({
     origin: process.env.APP_URL || "http://localhost:5000",
     credentials: true
 }))
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

@@ -9,4 +9,6 @@ router.get('/', medicinController.getAllMedicines)
 // no gurd just public data
 router.get('/:medicinId', medicinController.getMedicinById)
 
+
+
 export const medicinesRouter: Router = router;
