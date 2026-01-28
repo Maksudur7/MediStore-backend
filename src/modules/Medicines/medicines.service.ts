@@ -31,7 +31,7 @@ const getAllMedicines = async (query: any) => {
         andConditions.push({
             category: {
                 name: {
-                    equals: category, 
+                    equals: category,
                     mode: 'insensitive',
                 },
             },
@@ -77,6 +77,23 @@ const getAllMedicines = async (query: any) => {
     return result;
 };
 
+const getMedicinById = async (id: string) => {
+    const result = await prisma.medicine.findUniqueOrThrow({
+        where: {
+            id
+        },
+        select: {
+            orderItems: true,
+            reviews: true,
+            category: true,
+            seller: true
+        }
+    })
+
+    return result;
+}
+
 export const medicinesService = {
-    getAllMedicines
+    getAllMedicines,
+    getMedicinById
 };
