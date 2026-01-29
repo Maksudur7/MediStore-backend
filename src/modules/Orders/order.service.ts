@@ -42,6 +42,21 @@ const addToCart = async (userId: string, medicineId: string, quantity: number) =
     });
 };
 
+const getAllOrders = async () => {
+    const orders = await prisma.order.findMany({
+        include: {
+            items: {
+                include: {
+                    medicine: true
+                }
+            },
+            customer: true
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+    return orders;
+}
+
 const pleaseOrder = async (shippingAddress: string, userId: string) => {
 
     const cartItems = await prisma.cartItem.findMany({
@@ -138,5 +153,6 @@ export const orderServices = {
     addToCart,
     pleaseOrder,
     trackOrder,
-    getAllOrdersBySellerId
+    getAllOrdersBySellerId,
+    getAllOrders
 }

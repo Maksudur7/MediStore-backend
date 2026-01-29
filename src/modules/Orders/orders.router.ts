@@ -4,9 +4,11 @@ import { verifyToken } from "../../middleware/verifyToken";
 import { isAdminOrSeller } from "../../middleware/isAdminOrSeller.middleware";
 import { isSeller } from "../../middleware/seller.middleware";
 import { isPermitted } from "../../middleware/checkUserStatus";
+import { isAdmin } from "../../middleware/isAdmin.middleware";
 
 const router = Router()
 
+router.get('/', isPermitted, isAdmin, orderController.getAllOrders) 
 router.get('/:sellerId', isPermitted, isSeller, orderController.getAllOrdersBySellerId)
 router.post('/cart', isPermitted, verifyToken, orderController.addToCard)
 router.post('/', isPermitted, verifyToken, orderController.pleaseOrder)

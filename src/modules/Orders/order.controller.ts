@@ -15,6 +15,16 @@ const addToCard = async (req: Request, res: Response) => {
     }
 }
 
+const getAllOrders = async (req: Request, res: Response) => {
+    try {
+        const orders = await orderServices.getAllOrders();
+        res.status(200).json(orders);
+    }
+    catch (error: any) {
+        res.status(400).json({ error: "Failed to fetch orders", details: error.message });
+    }
+}
+
 const pleaseOrder = async (req: Request, res: Response) => {
     try {
         const { shippingAddress } = req.body
@@ -56,5 +66,6 @@ export const orderController = {
     addToCard,
     pleaseOrder,
     trackOrder,
-    getAllOrdersBySellerId
+    getAllOrdersBySellerId,
+    getAllOrders
 }
