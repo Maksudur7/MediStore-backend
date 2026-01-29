@@ -21,8 +21,20 @@ const updateUser = async (req: Request, res: Response) => {
     }
 }
 
+const updateUserByAdmin = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const {status} = req.body;
+    try {
+        const updatedUser = await userService.updateUserByAdmin(userId as string, status);
+        res.status(200).json(updatedUser);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Internal server error", error });
+    }
+}
 
 export const userController = {
     getAllUsers,
-    updateUser
+    updateUser,
+    updateUserByAdmin
 }
