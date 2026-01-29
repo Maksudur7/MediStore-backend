@@ -40,7 +40,7 @@ const pleaseOrder = async (req: Request, res: Response) => {
 const trackOrder = async (req: Request, res: Response) => {
     try {
         const { status } = req.body
-        const id = req.params.id;
+        const id = req.params.orderId;
         if (!id) {
             return res.status(400).json({ error: "Post ID is required" });
         }
