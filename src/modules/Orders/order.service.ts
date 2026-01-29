@@ -76,6 +76,20 @@ const pleaseOrder = async (shippingAddress: string, userId: string) => {
             }
         })
 
+        for (const item of cartItems) {
+            if (item.medicine.stockQuantity < item.quantity) {
+                throw new Error(`Only ${item.medicine.stockQuantity} items left in stock for ${item.medicine.name}!`);
+            }
+            await tx.medicine.update({
+                where: { id: item.medicineId },
+                data: {
+                    stockQuantity: {
+                        decrement: item.quantity
+                    }
+                }
+            });
+        }
+
         await tx.cartItem.deleteMany({
             where: { userId }
         })
