@@ -3,7 +3,7 @@ import { userController } from "./user.controller";
 
 const router = Router()
 
-router.post('/regster', userController.regsterUser)
-router.post('/login', userController.loginUser)
+router.get('/', userController.getAllUsers)
+router.patch('/:userId', userController.updateUser)
 
 export const userRouter: Router = router;

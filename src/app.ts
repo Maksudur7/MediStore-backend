@@ -5,6 +5,7 @@ import { reviewsRouter } from './modules/Reviews/reviews.router'
 import { orderRouter } from './modules/Orders/orders.router'
 import { medicinesRouter } from './modules/Medicines/medicines.router'
 import { categoryRouter } from './modules/Category/category.service'
+import { authRouter } from './modules/Auth/auth.router'
 const app: Application = express()
 
 
@@ -18,7 +19,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-app.use("/users", userRouter)
+app.use("/auth", authRouter)
+app.use("/user", userRouter)
 app.use("/reviews", reviewsRouter)
 app.use("/order", orderRouter)
 app.use("/medicines", medicinesRouter)
