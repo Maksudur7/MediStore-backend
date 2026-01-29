@@ -1,18 +1,25 @@
-
+import { prisma } from "../../lib/prisma";
 
 const createCategory = async (data: any) => {
-    // Logic to create a category
-    return "Category created";
+    const result = await prisma.category.create({
+        data: data
+    });
+    return result;
 }
 
 const updateCategory = async (id: string, data: any) => {
-    // Logic to update a category
-    return "Category updated";
+    const result = await prisma.category.update({
+        where: { id },
+        data: data
+    });
+    return result;
 }
 
 const deleteCategory = async (id: string) => {
-    // Logic to delete a category
-    return "Category deleted";
+    const result = await prisma.category.delete({
+        where: { id }
+    });
+    return result;
 }
 
 export const categoryService = {
