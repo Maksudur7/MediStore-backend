@@ -42,8 +42,19 @@ const trackOrder = async (req: Request, res: Response) => {
     }
 }
 
+const getAllOrdersBySellerId = async (req: Request, res: Response) => {
+    try {
+        const { sellerId } = req.params;
+        const orders = await orderServices.getAllOrdersBySellerId(sellerId as string);
+        res.status(200).json(orders);
+    } catch (error: any) {
+        res.status(400).json({ error: "Failed to fetch orders", details: error.message });
+    }
+}
+
 export const orderController = {
     addToCard,
     pleaseOrder,
-    trackOrder
+    trackOrder,
+    getAllOrdersBySellerId
 }

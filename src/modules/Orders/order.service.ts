@@ -110,8 +110,33 @@ const trackOrder = async (orderId: string, newStatus: OrderStatus) => {
     return result
 }
 
+const getAllOrdersBySellerId = async (sellerId: string) => {
+    const orders = await prisma.order.findMany({
+        where: {
+            items: {
+                some: {
+                    medicine: {
+                        sellerId: sellerId
+                    }
+                }
+            }
+        },
+        include: {
+            items: {
+                include: {
+                    medicine: true
+                }
+            },
+            customer: true
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+    return orders;
+}
+
 export const orderServices = {
     addToCart,
     pleaseOrder,
-    trackOrder
+    trackOrder,
+    getAllOrdersBySellerId
 }
