@@ -9,10 +9,12 @@ import { isAdmin } from "../../middleware/isAdmin.middleware";
 const router = Router()
 
 router.get('/', isPermitted, isAdmin, orderController.getAllOrders) 
-router.get('/:sellerId', isPermitted, isSeller, orderController.getAllOrdersBySellerId)
-router.post('/cart', isPermitted, verifyToken, orderController.addToCard)
-router.get('/cart/:userId', isPermitted, verifyToken, orderController.getCartByUserId)  
-router.post('/', isPermitted, verifyToken, orderController.pleaseOrder)
+router.get('/', isPermitted, isSeller, orderController.getAllOrdersBySellerId)
+router.post('/cart', isPermitted, verifyToken, orderController.addToCard)  
+router.get('/cart', isPermitted, verifyToken, orderController.getCartByUserId)   
+router.post('/', isPermitted, verifyToken, orderController.pleaseOrder)  
 router.patch('/:orderId', isPermitted, isAdminOrSeller, orderController.trackOrder)
+router.get('/', isPermitted, verifyToken, orderController.getMyOrders);
+router.get('/:id', isPermitted, verifyToken, orderController.getOrderDetails);
 
 export const orderRouter: Router = router;

@@ -6,9 +6,7 @@ import { isPermitted } from "../../middleware/checkUserStatus";
 const router = Router()
 
 router.get('/', isAdmin, userController.getAllUsers)
-
-// admin can update any user
-router.patch('/:userId', isPermitted, isAdmin, userController.updateUserByAdmin)
-router.patch('/:userId', isPermitted, userController.updateUser)
+router.patch('/:id', isPermitted, isAdmin, userController.updateUserByAdmin)
+router.patch('/:id', isPermitted, userController.updateUser)
 
 export const userRouter: Router = router;

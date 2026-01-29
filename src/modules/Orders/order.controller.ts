@@ -54,7 +54,7 @@ const trackOrder = async (req: Request, res: Response) => {
 
 const getAllOrdersBySellerId = async (req: Request, res: Response) => {
     try {
-        const { sellerId } = req.params;
+        const { userId } = req.user;
         const orders = await orderServices.getAllOrdersBySellerId(sellerId as string);
         res.status(200).json(orders);
     } catch (error: any) {
@@ -64,11 +64,34 @@ const getAllOrdersBySellerId = async (req: Request, res: Response) => {
 
 const getCartByUserId = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.user;
         const cart = await orderServices.getCartByUserId(userId as string);
         res.status(200).json(cart);
     } catch (error: any) {
         res.status(400).json({ error: "Failed to fetch cart", details: error.message });
+    }
+}
+
+const getMyOrders = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user;
+        const orders = await orderServices.getMyOrders(userId as string);
+        res.status(200).json(orders);
+    }
+    catch (error: any) {
+        res.status(400).json({ error: "Failed to fetch orders", details: error.message });
+    }
+}
+
+const getOrderDetails = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { userId } = req.user;
+        const order = await orderServices.getOrderDetails(id as string, userId as string);
+        res.status(200).json(order);
+    }
+    catch (error: any) {
+        res.status(400).json({ error: "Failed to fetch order details", details: error.message });
     }
 }
 
@@ -78,5 +101,7 @@ export const orderController = {
     trackOrder,
     getAllOrdersBySellerId,
     getAllOrders,
-    getCartByUserId
+    getCartByUserId,
+    getMyOrders,
+    getOrderDetails
 }

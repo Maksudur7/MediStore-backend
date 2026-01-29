@@ -159,11 +159,37 @@ const getCartByUserId = async (userId: string) => {
     return cartItems;
 }
 
+
+const getMyOrders = async (userId: string) => {
+    return await prisma.order.findMany({
+        where: { customerId: userId },
+        include: {
+            items: { include: { medicine: true } }
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+};
+
+
+const getOrderDetails = async (orderId: string, userId: string) => {
+    return await prisma.order.findFirst({
+        where: {
+            id: orderId,
+            customerId: userId
+        },
+        include: {
+            items: { include: { medicine: true } }
+        }
+    });
+};
+
 export const orderServices = {
     addToCart,
     pleaseOrder,
     trackOrder,
     getAllOrdersBySellerId,
     getAllOrders,
-    getCartByUserId
+    getCartByUserId,
+    getMyOrders,
+    getOrderDetails
 }

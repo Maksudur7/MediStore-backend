@@ -4,6 +4,7 @@ import { isAdmin } from "../../middleware/isAdmin.middleware";
 
 const router = Router()
 
+router.get('/', categoryController.getAllCategories)
 router.post('/', isAdmin, categoryController.createCategory)
 router.patch('/:categoryId', isAdmin, categoryController.updateCategory)
 router.delete('/', isAdmin, categoryController.deleteCategory)
