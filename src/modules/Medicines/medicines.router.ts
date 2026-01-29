@@ -6,7 +6,7 @@ import { isPermitted } from "../../middleware/checkUserStatus";
 const router = Router()
 
 // no gurd just public data 
-router.get('/', medicinController.getAllMedicines)
+router.get('/shop', medicinController.getAllMedicines)
 
 // no gurd just public data
 router.get('/:medicinId', medicinController.getMedicinById)

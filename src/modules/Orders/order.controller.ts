@@ -62,10 +62,21 @@ const getAllOrdersBySellerId = async (req: Request, res: Response) => {
     }
 }
 
+const getCartByUserId = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const cart = await orderServices.getCartByUserId(userId as string);
+        res.status(200).json(cart);
+    } catch (error: any) {
+        res.status(400).json({ error: "Failed to fetch cart", details: error.message });
+    }
+}
+
 export const orderController = {
     addToCard,
     pleaseOrder,
     trackOrder,
     getAllOrdersBySellerId,
-    getAllOrders
+    getAllOrders,
+    getCartByUserId
 }

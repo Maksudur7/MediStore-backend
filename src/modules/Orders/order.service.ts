@@ -149,10 +149,21 @@ const getAllOrdersBySellerId = async (sellerId: string) => {
     return orders;
 }
 
+const getCartByUserId = async (userId: string) => {
+    const cartItems = await prisma.cartItem.findMany({
+        where: { userId },
+        include: {
+            medicine: true
+        }
+    });
+    return cartItems;
+}
+
 export const orderServices = {
     addToCart,
     pleaseOrder,
     trackOrder,
     getAllOrdersBySellerId,
-    getAllOrders
+    getAllOrders,
+    getCartByUserId
 }
