@@ -1,100 +1,93 @@
-import { Request, Response } from "express"
 import { orderServices } from "./order.service";
-
-const addToCard = async (req: Request, res: Response) => {
+const addToCard = async (req, res) => {
     try {
         const { medicineId, quantity } = req.body;
         const { userId } = req.user;
         if (!userId) {
             return res.status(401).json({ success: false, message: "User not authenticated!" });
         }
-        const result = await orderServices.addToCart(userId, medicineId, quantity)
+        const result = await orderServices.addToCart(userId, medicineId, quantity);
         res.status(200).json(result);
-    } catch (error: any) {
+    }
+    catch (error) {
         res.status(400).json({ error: "Failed to post Medicin", details: error.message });
     }
-}
-
-const getAllOrders = async (req: Request, res: Response) => {
+};
+const getAllOrders = async (req, res) => {
     try {
         const orders = await orderServices.getAllOrders();
         res.status(200).json(orders);
     }
-    catch (error: any) {
+    catch (error) {
         res.status(400).json({ error: "Failed to fetch orders", details: error.message });
     }
-}
-
-const pleaseOrder = async (req: Request, res: Response) => {
+};
+const pleaseOrder = async (req, res) => {
     try {
-        const { shippingAddress } = req.body
+        const { shippingAddress } = req.body;
         const { userId } = req.user;
-        const result = await orderServices.pleaseOrder(shippingAddress, userId)
+        const result = await orderServices.pleaseOrder(shippingAddress, userId);
         res.status(200).json(result);
-
-    } catch (error: any) {
+    }
+    catch (error) {
         res.status(400).json({ error: "Failed to post Medicin", details: error.message });
     }
-}
-
-const trackOrder = async (req: Request, res: Response) => {
+};
+const trackOrder = async (req, res) => {
     try {
-        const { status } = req.body
+        const { status } = req.body;
         const id = req.params.orderId;
         if (!id) {
             return res.status(400).json({ error: "Post ID is required" });
         }
-        const result = await orderServices.trackOrder(id as string, status)
+        const result = await orderServices.trackOrder(id, status);
         res.status(200).json(result);
-
-    } catch (error: any) {
+    }
+    catch (error) {
         res.status(400).json({ error: "Failed to post Medicin", details: error.message });
     }
-}
-
-const getAllOrdersBySellerId = async (req: Request, res: Response) => {
+};
+const getAllOrdersBySellerId = async (req, res) => {
     try {
-        const { userId } = (req as any).user;
-        const orders = await orderServices.getAllOrdersBySellerId(userId as string);
+        const { userId } = req.user;
+        const orders = await orderServices.getAllOrdersBySellerId(userId);
         res.status(200).json(orders);
-    } catch (error: any) {
+    }
+    catch (error) {
         res.status(400).json({ error: "Failed to fetch orders", details: error.message });
     }
-}
-
-const getCartByUserId = async (req: Request, res: Response) => {
+};
+const getCartByUserId = async (req, res) => {
     try {
-        const { userId } = (req as any).user;
-        const cart = await orderServices.getCartByUserId(userId as string);
+        const { userId } = req.user;
+        const cart = await orderServices.getCartByUserId(userId);
         res.status(200).json(cart);
-    } catch (error: any) {
+    }
+    catch (error) {
         res.status(400).json({ error: "Failed to fetch cart", details: error.message });
     }
-}
-
-const getMyOrders = async (req: Request, res: Response) => {
+};
+const getMyOrders = async (req, res) => {
     try {
-        const { userId } = (req as any).user;
-        const orders = await orderServices.getMyOrders(userId as string);
+        const { userId } = req.user;
+        const orders = await orderServices.getMyOrders(userId);
         res.status(200).json(orders);
     }
-    catch (error: any) {
+    catch (error) {
         res.status(400).json({ error: "Failed to fetch orders", details: error.message });
     }
-}
-
-const getOrderDetails = async (req: Request, res: Response) => {
+};
+const getOrderDetails = async (req, res) => {
     try {
         const { id } = req.params;
-        const { userId } = (req as any).user;
-        const order = await orderServices.getOrderDetails(id as string, userId as string);
+        const { userId } = req.user;
+        const order = await orderServices.getOrderDetails(id, userId);
         res.status(200).json(order);
     }
-    catch (error: any) {
+    catch (error) {
         res.status(400).json({ error: "Failed to fetch order details", details: error.message });
     }
-}
-
+};
 export const orderController = {
     addToCard,
     pleaseOrder,
@@ -104,4 +97,5 @@ export const orderController = {
     getCartByUserId,
     getMyOrders,
     getOrderDetails
-}
+};
+//# sourceMappingURL=order.controller.js.map
