@@ -1,3 +1,6 @@
+
+import { Prisma } from "../../../generated/prisma/client";
+import { Role } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 const getAllUsers = async () => {
@@ -6,20 +9,29 @@ const getAllUsers = async () => {
 }
 
 const updateUser = async (userId: string, data: { name?: string; email?: string, image?: string, phone?: string }) => {
+    const updateData: Prisma.UserUpdateInput = {};
+
+    if (data.name) updateData.name = data.name;
+    if (data.email) updateData.email = data.email;
+    if (data.image) updateData.image = data.image;
+    if (data.phone) updateData.phone = data.phone;
+
     const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: data
+        data: updateData
     });
     return updatedUser;
 }
 
 const updateUserByAdmin = async (userId: string, data: { role?: string; status?: boolean }) => {
+    const updateData: any = {};
+
+    if (data.role) updateData.role = data.role as Role;
+    if (typeof data.status === 'boolean') updateData.status = data.status;
+
     const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: {
-            ...(data.role && { role: data.role }),
-            ...(typeof data.status === 'boolean' && { status: data.status })
-        }
+        data: updateData
     });
     return updatedUser;
 }
@@ -55,6 +67,7 @@ const getSellerStats = async (userId: string) => {
         take: 5,
         orderBy: { createdAt: 'desc' }
     });
+
     const totalSales = await prisma.order.aggregate({
         where: { items: { some: { medicine: { sellerId: userId } } } },
         _sum: { totalAmount: true }
@@ -65,14 +78,17 @@ const getSellerStats = async (userId: string) => {
         _sum: { price: true },
     });
 
+    const revenue = totalSales._sum.totalAmount || 0;
+    const medicinePriceTotal = totalAmount._sum.price || 0;
 
     return {
         totalSales: totalSales,
         totalMedicines,
         newOrders: recentOrders.length,
-        profitRate: ((totalAmount._sum.price! - totalSales._sum.totalAmount!) / (totalSales._sum.totalAmount! || 1)) * 100,
+        // প্রফিট ক্যালকুলেশনে 0 দিয়ে ভাগ হওয়া এড়াতে চেক:
+        profitRate: revenue > 0 ? ((medicinePriceTotal - revenue) / revenue) * 100 : 0,
         recentOrders,
-        totalRevenue: totalSales._sum.totalAmount || 0,
+        totalRevenue: revenue,
     };
 }
 
