@@ -29,4 +29,6 @@ app.use("/medicines", medicinesRouter)
 app.use("/category", categoryRouter)
 app.use('/cart', cartRouter)
 
+module.exports = app;
+
 export default app;

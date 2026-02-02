@@ -10,7 +10,8 @@
     "build": "prisma generate && tsup src/index.ts --format esm --platform node --target node20 --outDir api --external pg-native",
     "postinstall": "prisma generate",
     "start:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start:prod": "node dist/server.js"
+    "start:prod": "node dist/server.js",
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
