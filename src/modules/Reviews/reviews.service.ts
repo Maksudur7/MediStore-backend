@@ -28,6 +28,17 @@ const postReview = async (userId: string, medicineId: string, rating: number, co
     });
 }
 
+const getAllReviews = async () => {
+    return await prisma.review.findMany({
+        include: {
+            customer: true,
+            medicine: true
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+}
+
 export const reviewServices = {
-    postReview
+    postReview,
+    getAllReviews
 }

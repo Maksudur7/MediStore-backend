@@ -13,6 +13,16 @@ const postReview = async (req: Request, res: Response) => {
     }
 }
 
+const getAllReviews = async (req: Request, res: Response) => {
+    try {
+        const reviews = await reviewServices.getAllReviews();
+        res.status(200).json(reviews);
+    } catch (error: any) {
+        res.status(400).json({ error: "Failed to get reviews", details: error.message });
+    }
+}
+
 export const reviewController = {
-    postReview
+    postReview,
+    getAllReviews
 }

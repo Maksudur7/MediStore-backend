@@ -78,22 +78,26 @@ const getAllMedicines = async (query: any) => {
 };
 
 const getMedicinById = async (id: string) => {
-    const result = await prisma.medicine.findUniqueOrThrow({
-        where: {
-            id
-        },
-        select: {
-            orderItems: true,
-            reviews: true,
+    return await prisma.medicine.findUniqueOrThrow({
+        where: { id: id },
+        include: {
             category: true,
-            seller: true
+            seller: true,
+            reviews: true,
+            orderItems: true
         }
-    })
-
-    return result;
+    });
 }
 
 const createMedicine = async (medicineData: any) => {
+    const categoryExists = await prisma.category.findUnique({
+        where: { id: medicineData.categoryId }
+    });
+
+    if (!categoryExists) {
+        throw new Error("Invalid Category ID provided!");
+    }
+
     const result = await prisma.medicine.create({
         data: medicineData
     });

@@ -16,10 +16,20 @@ const updateCategory = async (id: string, data: any) => {
 }
 
 const deleteCategory = async (id: string) => {
-    const result = await prisma.category.delete({
-        where: { id }
-    });
-    return result;
+    try {
+        const result = await prisma.category.delete({
+            where: { id: id }
+        });
+        return result;
+    } catch (error: any) {
+        if (error.code === 'P2025') {
+            throw new Error("Category not found in database.");
+        }
+        if (error.code === 'P2003') {
+            throw new Error("Cannot delete category. It is linked to existing medicines.");
+        }
+        throw error;
+    }
 }
 
 const getAllCategories = async () => {

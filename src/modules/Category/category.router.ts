@@ -7,6 +7,6 @@ const router = Router()
 router.get('/', categoryController.getAllCategories)
 router.post('/', isAdmin, categoryController.createCategory)
 router.patch('/:categoryId', isAdmin, categoryController.updateCategory)
-router.delete('/', isAdmin, categoryController.deleteCategory)
+router.delete('/:categoryId', isAdmin, categoryController.deleteCategory)
 
 export const categoryRouter: Router = router;

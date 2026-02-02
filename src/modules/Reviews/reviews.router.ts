@@ -6,5 +6,6 @@ import { isPermitted } from "../../middleware/checkUserStatus";
 const router = Router()
 
 router.post('/', isPermitted, verifyToken, reviewController.postReview)
+router.get('/', reviewController.getAllReviews)
 
 export const reviewsRouter: Router = router;

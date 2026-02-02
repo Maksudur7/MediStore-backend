@@ -1,20 +1,6 @@
 import { Request, Response } from "express"
 import { orderServices } from "./order.service";
 
-const addToCard = async (req: Request, res: Response) => {
-    try {
-        const { medicineId, quantity } = req.body;
-        const { userId } = req.user;
-        if (!userId) {
-            return res.status(401).json({ success: false, message: "User not authenticated!" });
-        }
-        const result = await orderServices.addToCart(userId, medicineId, quantity)
-        res.status(200).json(result);
-    } catch (error: any) {
-        res.status(400).json({ error: "Failed to post Medicin", details: error.message });
-    }
-}
-
 const getAllOrders = async (req: Request, res: Response) => {
     try {
         const orders = await orderServices.getAllOrders();
@@ -62,16 +48,6 @@ const getAllOrdersBySellerId = async (req: Request, res: Response) => {
     }
 }
 
-const getCartByUserId = async (req: Request, res: Response) => {
-    try {
-        const { userId } = (req as any).user;
-        const cart = await orderServices.getCartByUserId(userId as string);
-        res.status(200).json(cart);
-    } catch (error: any) {
-        res.status(400).json({ error: "Failed to fetch cart", details: error.message });
-    }
-}
-
 const getMyOrders = async (req: Request, res: Response) => {
     try {
         const { userId } = (req as any).user;
@@ -96,12 +72,10 @@ const getOrderDetails = async (req: Request, res: Response) => {
 }
 
 export const orderController = {
-    addToCard,
     pleaseOrder,
     trackOrder,
     getAllOrdersBySellerId,
     getAllOrders,
-    getCartByUserId,
     getMyOrders,
     getOrderDetails
 }

@@ -11,9 +11,13 @@ export const isPermitted = async (req: any, res: any, next: any) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
         const userId = decoded?.userId || decoded?.id;
         const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
         if (user?.status === false) {
             return res.status(403).json({ message: "You are banned from this platform!" });
         }
+        req.user = user;
         next();
     } catch (error) {
         return res.status(401).json({ message: "Invalid or expired token!" });

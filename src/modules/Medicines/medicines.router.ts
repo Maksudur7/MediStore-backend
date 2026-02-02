@@ -13,7 +13,7 @@ router.get('/:medicinId', medicinController.getMedicinById)
 
 router.post('/', isPermitted, isSeller, medicinController.createMedicine)
 
-router.put('/:medicinId', isPermitted, isSeller, medicinController.updateMedicine)
+router.patch('/:medicinId', isPermitted, isSeller, medicinController.updateMedicine)
 
 router.delete('/:medicinId', isPermitted, isSeller, medicinController.deleteMedicine)
 

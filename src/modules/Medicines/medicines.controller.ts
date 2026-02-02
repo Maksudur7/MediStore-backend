@@ -26,11 +26,31 @@ const getMedicinById = async (req: Request, res: Response) => {
 
 const createMedicine = async (req: Request, res: Response) => {
     try {
-        const medicineData = req.body;
+        const user = (req as any).user;
+        if (!user || !user.id) {
+            return res.status(401).json({ success: false, message: "Seller identity missing" });
+        }
+        const medicineData = {
+            ...req.body,
+            price: parseFloat(req.body.price),
+            stockQuantity: parseInt(req.body.stockQuantity),
+            sellerId: user.id
+        };
+
         const result = await medicinesService.createMedicine(medicineData);
-        res.status(201).json(result);
+
+        res.status(201).json({
+            success: true,
+            message: "Medicine created successfully",
+            data: result
+        });
     } catch (error: any) {
-        res.status(400).json({ error: "Failed to create medicine", details: error.message });
+        console.error("CREATE ERROR:", error.message);
+        res.status(400).json({
+            success: false,
+            error: "Failed to create medicine",
+            details: error.message
+        });
     }
 }
 

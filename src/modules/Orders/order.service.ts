@@ -1,47 +1,6 @@
 import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
 
-
-const addToCart = async (userId: string, medicineId: string, quantity: number) => {
-    console.log(userId, medicineId, quantity);
-    const medicine = await prisma.medicine.findUnique({
-        where: { id: medicineId }
-    });
-    if (!medicine) {
-        throw new Error("Medicine not found!");
-    }
-
-    if (medicine.stockQuantity < quantity) {
-        throw new Error(`Only ${medicine.stockQuantity} items left in stock!`);
-    }
-
-    const existingCartItem = await prisma.cartItem.findUnique({
-        where: {
-            userId_medicineId: {
-                userId: userId,
-                medicineId: medicineId
-            }
-        }
-    });
-
-    if (existingCartItem) {
-        return await prisma.cartItem.update({
-            where: { id: existingCartItem.id },
-            data: {
-                quantity: existingCartItem.quantity + quantity
-            }
-        });
-    }
-
-    return await prisma.cartItem.create({
-        data: {
-            userId,
-            medicineId,
-            quantity
-        }
-    });
-};
-
 const getAllOrders = async () => {
     const orders = await prisma.order.findMany({
         include: {
@@ -149,25 +108,16 @@ const getAllOrdersBySellerId = async (sellerId: string) => {
     return orders;
 }
 
-const getCartByUserId = async (userId: string) => {
-    const cartItems = await prisma.cartItem.findMany({
-        where: { userId },
-        include: {
-            medicine: true
-        }
-    });
-    return cartItems;
-}
-
 
 const getMyOrders = async (userId: string) => {
-    return await prisma.order.findMany({
+    const res = await prisma.order.findMany({
         where: { customerId: userId },
         include: {
             items: { include: { medicine: true } }
         },
         orderBy: { createdAt: 'desc' }
     });
+    return res;
 };
 
 
@@ -184,12 +134,10 @@ const getOrderDetails = async (orderId: string, userId: string) => {
 };
 
 export const orderServices = {
-    addToCart,
     pleaseOrder,
     trackOrder,
     getAllOrdersBySellerId,
     getAllOrders,
-    getCartByUserId,
     getMyOrders,
     getOrderDetails
 }

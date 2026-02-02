@@ -8,7 +8,8 @@ const createCategory = async (req: Request, res: Response) => {
         const result = await categoryService.createCategory(req.body);
         res.status(200).json(result);
     } catch (error: any) {
-        res.status(400).json({ error: "Failed to fetch orders", details: error.message });
+        console.error("Backend Error:", error);
+        res.status(400).json({ error: "Failed to create category", details: error.message });
     }
 }
 
@@ -23,7 +24,7 @@ const updateCategory = async (req: Request, res: Response) => {
 
 const deleteCategory = async (req: Request, res: Response) => {
     try {
-        const result = await categoryService.deleteCategory(req.params.id as string);
+        const result = await categoryService.deleteCategory(req.params.categoryId as string);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(400).json({ error: "Failed to delete category", details: error.message });
