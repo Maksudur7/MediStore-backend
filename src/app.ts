@@ -11,7 +11,7 @@ const app: Application = express()
 
 
 app.use(cors({
-    origin: process.env.APP_URL || "https://medistore-woad.vercel.app",
+    origin: [process.env.APP_URL || "https://medistore-woad.vercel.app", process.env.APP_URL2 || "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true
 }))

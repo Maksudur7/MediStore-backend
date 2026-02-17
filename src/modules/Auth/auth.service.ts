@@ -12,14 +12,17 @@ const regsterUser = async (userData: any) => {
 
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = await bcrypt.hashSync(password, salt);
-
+    let finalStatus: true | false;
     let finalRole: "CUSTOMER" | "SELLER" | "ADMIN";
     if (role === "CUSTOMER") {
         finalRole = "CUSTOMER";
+        finalStatus = true;
     } else if (role === "SELLER") {
         finalRole = "SELLER";
-    }else{
+        finalStatus = false;
+    } else {
         finalRole = "ADMIN";
+        finalStatus = true
     }
 
     const result = await prisma.user.create({
@@ -27,6 +30,7 @@ const regsterUser = async (userData: any) => {
             name,
             email,
             role: finalRole,
+            status: finalStatus,
             accounts: {
                 create: {
                     accountId: email,
@@ -40,6 +44,7 @@ const regsterUser = async (userData: any) => {
             name: true,
             email: true,
             role: true,
+            status: true,
             phone: true,
             createdAt: true,
             image: true,
@@ -54,6 +59,7 @@ const regsterUser = async (userData: any) => {
             userId: result.id,
             email: result.email,
             role: result.role,
+            status: result.status,
             phone: phone
         },
         jwtSecret as string,

@@ -4,8 +4,10 @@
   "description": "\"# MediStore-backend\"",
   "main": "dist/server.js",
   "scripts": {
-    "build": "prisma generate",
-    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsx watch src/server.ts",
+    "seed:admin": "npx tsx src/scripts/seedAdmin.ts",
+    "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir api --external pg-native",
     "postinstall": "prisma generate"
   },
   "repository": {
@@ -30,7 +32,7 @@
     "@types/node": "^25.0.10",
     "@types/pg": "^8.16.0",
     "prisma": "^7.3.0",
-    "tsuo": "^8.5.1",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
@@ -43,6 +45,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.17.2"
+    "pg": "^8.17.2",
+    "vercel": "^50.18.0"
   }
 }
